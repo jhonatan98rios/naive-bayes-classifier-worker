@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-naive-bayes-worker",
+  "module": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.423.0",
+    "@aws-sdk/client-sqs": "^3.423.0",
+    "aws-sdk": "^2.1473.0",
+    "csv-parse": "^5.5.0",
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.5.3",
+    "natural": "^6.7.2",
+    "sqs-consumer": "^7.3.0"
+  }
+}
