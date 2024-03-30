@@ -27,5 +27,6 @@ app.on('timeout_error', (err) => {
 });
 
 app.start();
-console.log("Start consuming")
+console.log("Working!")
+console.log("Start consuming!")
 

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  naive-bayes-classifier-worker:
+    restart: always
+    build:
+      context: .
+    env_file:
+      .env
+    networks:
+      - naive-bayes-classifier-network
+    volumes:
+      - ".:/app"
+
+networks:
+  naive-bayes-classifier-network:
+    driver: bridge

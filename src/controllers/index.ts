@@ -1,9 +1,9 @@
 import { Message } from "@aws-sdk/client-sqs";
 import { EventPayload } from "../domain/entity/EventPayload";
-import { S3ProviderV2 } from "../infra/providers/S3ProviderV2";
 import { ClassifierService } from "../services/ClassifierService";
 import { CSVRepository } from "../infra/repositories/CsvRepository";
 import { MongoDBClassifierRepository } from "../infra/repositories/MongoDBClassifierRepository";
+import { S3Provider } from "../infra/providers/S3Provider";
 
 export default class ClasssifierController {
 
@@ -15,7 +15,7 @@ export default class ClasssifierController {
         console.log(eventPayload)
 
         const csvRepository = new CSVRepository()
-        const storageProvider = new S3ProviderV2()
+        const storageProvider = new S3Provider()
         const classifierRepository = new MongoDBClassifierRepository()
 
         const trainClassifierService = new ClassifierService(storageProvider, csvRepository, classifierRepository)
