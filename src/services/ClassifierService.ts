@@ -1,6 +1,6 @@
 import { BayesClassifier } from 'natural'
 
-import { trainRow } from "../types/trainRow"
+import { Dataset, trainRow } from "../types/trainRow"
 
 import { CSVRepository } from "../infra/repositories/CsvRepository"
 import { EventPayload } from "../domain/entity/EventPayload"
@@ -8,6 +8,7 @@ import { Classifier, STATUS } from '../domain/entity/Classifier';
 
 import { AbstractClassifierRepository } from '../domain/repositories/AbstractClassifierRepository';
 import { AbstractStorageProvider } from '../domain/providers/AbstractStorageProvider'
+import { handlePromise } from '../utils/handlePromise';
 
 
 export class ClassifierService {
@@ -24,7 +25,9 @@ export class ClassifierService {
             if (!object) throw new Error(`File ${eventPayload.path} doesn't exist`)
 
             /* Parse CSV from buffer */
-            const dataset = await this.parseCSV(object)
+
+            const [parseError, dataset] = await handlePromise<Dataset>(this.parseCSV(object))
+            if (parseError) throw new Error(`Error while parsing csv ${parseError}`)
 
             /* Split data in Train and Test */
             const { trainDataset, testDataset } = this.splitTrainTestDataset(dataset)
@@ -45,6 +48,7 @@ export class ClassifierService {
             const updateClassifierDTO = new Classifier({
                 id: eventPayload.id,
                 name: eventPayload.name,
+                description: eventPayload.description,
                 accuracy,
                 format: 'csv',
                 isPublic: eventPayload.isPublic,
@@ -53,7 +57,6 @@ export class ClassifierService {
                 rating: 0,
                 size: filesize,
                 status: STATUS.READY,
-                description: ''
             })
 
             const updatedClassifier = await this.classifierRepository.update(eventPayload.id, updateClassifierDTO)
@@ -69,6 +72,7 @@ export class ClassifierService {
             const updateClassifierDTO = new Classifier({
                 id: eventPayload.id,
                 name: eventPayload.name,
+                description: eventPayload.description,
                 accuracy: 0,
                 format: 'csv',
                 isPublic: eventPayload.isPublic,
@@ -77,19 +81,21 @@ export class ClassifierService {
                 rating: 0,
                 size: 0,
                 status: STATUS.FAILED,
-                description: ''
             })
 
             const updatedClassifier = await this.classifierRepository.update(eventPayload.id, updateClassifierDTO)
             console.log(updatedClassifier)
-            throw new Error(JSON.stringify(err))
+            throw new Error(`Error while processing the file: ${err}`)
         }
     }
 
-    async parseCSV(object: Uint8Array): Promise<trainRow[]> {
+    async parseCSV(object: Uint8Array): Promise<Dataset> {
         console.log("Parsing file...")
         const buffer = Buffer.from(object)
-        const dataset: trainRow[] = await this.csvRepository.parseCSVBuffer(buffer)
+
+        const [parseError, dataset] = await handlePromise<Dataset>(this.csvRepository.parseCSVBuffer(buffer))
+        if (parseError || !dataset.length || dataset.length == 0 ) throw new Error(`Error: ${ parseError ? parseError : 'Corrupted file' }`)
+
         console.log("Rows: ", dataset.length)
         return dataset
     }
