@@ -4,10 +4,16 @@ export enum STATUS {
     FAILED = 'failed'
 }
 
+export enum MODEL_TYPE {
+    NLP = 'nlp',
+    NUM = 'num',
+}
+
 export class Classifier {
     id: string
     name: string
     description: string
+    type: MODEL_TYPE
     size: number
     format: string
     accuracy: number
@@ -17,10 +23,11 @@ export class Classifier {
     isPublic: boolean
     owners: string[]
 
-    constructor({ id, name, description, size, format, accuracy, status, rating, path, isPublic, owners }: Classifier) {
+    constructor({ id, name, description, type, size, format, accuracy, status, rating, path, isPublic, owners }: Classifier) {
         this.id = id
         this.name = name
         this.description = description
+        this.type = type
         this.size = size
         this.format = format
         this.accuracy = accuracy

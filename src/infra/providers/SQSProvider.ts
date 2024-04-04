@@ -9,7 +9,7 @@ export class SQSProvider {
 
   constructor() {
     this.sqsClient = new SQSClient({ region: "us-east-1" });
-    this.queueUrl = process.env.QUEUE_NAME!
+    this.queueUrl = process.env.NLP_QUEUE_URL!
   }
 
   public async sendMessage(message: string): Promise<void> {

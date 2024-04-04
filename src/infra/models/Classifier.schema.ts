@@ -5,6 +5,7 @@ const ClassifierSchema: Schema = new Schema<Classifier, Model<Classifier>>({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: false },
     description: { type: String, required: true, unique: false },
+    type: { type: String, required: true, unique: false },
     size: { type: Number, required: true, unique: false },
     format: { type: String, required: true, unique: false },
     accuracy: { type: Number, required: true, unique: false },
