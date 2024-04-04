@@ -9,7 +9,7 @@ Database.connect()
 const classsifierController = new ClasssifierController()
 
 const app = Consumer.create({
-    queueUrl: process.env.QUEUE_URL!,
+    queueUrl: process.env.NLP_QUEUE_URL!,
     region: process.env.AWS_REGION!,
     handleMessage: classsifierController.handle
 });
