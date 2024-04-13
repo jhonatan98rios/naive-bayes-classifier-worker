@@ -1,5 +1,7 @@
 # Natural Language Processing - Naive Bayes Classifier
 
+![Diagrama da arquietura](https://github.com/jhonatan98rios/naive-bayes-classifier-infra/blob/main/diagram.png?raw=true)
+
 ## Estrutura
 - Escuta a fila no SQS
 - Lê os dados do evento com os dados do arquivo de treino
